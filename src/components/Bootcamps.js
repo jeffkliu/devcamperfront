@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
+import BootcampItem from './BootcampItem';
+import PropTypes from 'prop-types';
 
 class Bootcamps extends Component {
   render() {
-    console.log(this.props.bootcamps);
-    return this.props.bootcamps.map((bootcamp) => <h3>{bootcamp.title}</h3>);
+    return this.props.bootcamps.map((bootcamp) => (
+      <BootcampItem
+        key={bootcamp.id}
+        bootcamp={bootcamp}
+        delBootcamp={this.props.delBootcamp}
+      />
+    ));
   }
 }
+
+// PropTypes
+Bootcamps.propTypes = {
+  bootcamps: PropTypes.array.isRequired,
+};
 
 export default Bootcamps;

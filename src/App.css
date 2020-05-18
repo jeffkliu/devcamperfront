@@ -13,3 +13,33 @@ a {
   color: #333333;
   text-decoration: none;
 }
+
+.container {
+  padding: 0 1rem;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  background: #555;
+  color: #fff;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #666;
+}
+
+.content {
+  cursor: pointer;
+  border-left: solid 1px #f2f2f2;
+  border-right: solid 1px #f2f2f2;
+  border-bottom: solid 1px #f2f2f2;
+  border-radius: 0 0 5px 5px;
+  padding: 15px;
+  font-family: verdana;
+  font-size: 14px;
+  background: #fff;
+  overflow: scroll;
+}
