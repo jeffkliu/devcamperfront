@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Collapsible from './Collapsible';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import Popup from 'reactjs-popup';
+import Form from 'react-bootstrap/Form';
+import AddCourse from './AddCourse';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export class BootcampItem extends Component {
   state = {
@@ -9,15 +15,6 @@ export class BootcampItem extends Component {
     bootcamp: { ...this.props.bootcamp },
     view: '',
     clicked: false,
-  };
-  getStyle = () => {
-    return {
-      background: '#f4f4f4',
-      padding: '10px',
-      border: '1px #ccc dotted',
-      position: 'relative',
-      //textDecoration: this.props.bootcamp.completed ? 'line-through' : 'none',
-    };
   };
 
   getCourses = (id) => {
@@ -30,6 +27,21 @@ export class BootcampItem extends Component {
           clicked: !this.state.clicked,
         });
         this.child.togglePanel();
+      });
+  };
+
+  // add Course
+  addCourse = (id, obj) => {
+    this.setState({
+      bootcamps: [...this.state.courses, obj],
+    });
+    axios
+      .post(
+        `https://amer-demo14-test.apigee.net/api/v1/bootcamps/${id}/courses`,
+        obj
+      )
+      .then((res) => {
+        console.log('Success');
       });
   };
 
@@ -46,37 +58,59 @@ export class BootcampItem extends Component {
         return JSON.stringify(this.state.courses, null, 2);
       default:
         return 'Please select buttons on right for more information.';
+      //          onClick={this.props.delBootcamp.bind(this, this.state.bootcamp.id)}
     }
   };
 
   render() {
     return (
-      <div style={this.getStyle()}>
-        <button
+      <div className="bootcamp">
+        <FontAwesomeIcon
+          icon={faTrash}
+          style={{
+            margin: '5px',
+            cursor: 'pointer',
+            float: 'right',
+          }}
           onClick={this.props.delBootcamp.bind(this, this.state.bootcamp.id)}
-          style={btnStyle}
+        />
+        <Button
+          className="getbootcampbtn"
+          onClick={this.getBootcamps}
+          variant="outline-primary"
+          size="sm"
         >
-          x
-        </button>
-        <button onClick={this.getBootcamps} style={bootcampButton}>
-          Bootcamp Detail
-        </button>
-        <button
+          Get Bootcamp
+        </Button>{' '}
+        <Button
+          className="getcoursesbtn"
           onClick={this.getCourses.bind(this, this.state.bootcamp.id)}
-          style={courseButton}
+          size="sm"
         >
           Courses Detail
-        </button>
-        <Collapsible
-          clicked={this.state.clicked}
-          onRef={(ref) => (this.child = ref)}
-          title={this.state.bootcamp.name}
-        >
-          <div>
-            <h1>{this.state.view}</h1>
-            <pre>{this.renderSwitch(this.state.view)}</pre>
-          </div>
-        </Collapsible>
+        </Button>
+        <br />
+        <div>
+          <Collapsible
+            clicked={this.state.clicked}
+            onRef={(ref) => (this.child = ref)}
+            title={this.state.bootcamp.name}
+            className="bootcamptitle"
+            cost={this.state.bootcamp.averageCost}
+            closeOnDocumentClick
+          >
+            <div className="header">
+              <h1 style={{ display: 'inline-block' }}>{this.state.view}</h1>{' '}
+              {this.state.view === 'Courses' ? (
+                <AddCourse
+                  addCourse={this.addCourse}
+                  bootcampId={this.state.bootcamp.id}
+                />
+              ) : null}
+              <pre>{this.renderSwitch(this.state.view)}</pre>
+            </div>
+          </Collapsible>
+        </div>
       </div>
     );
   }
@@ -85,30 +119,6 @@ export class BootcampItem extends Component {
 // PropTypes
 BootcampItem.propTypes = {
   bootcamp: PropTypes.object.isRequired,
-};
-
-const btnStyle = {
-  background: '#ff0000',
-  color: '#fff',
-  border: 'none',
-  padding: '5px 9px',
-  borderRadius: '50%',
-  cursor: 'pointer',
-  float: 'right',
-};
-
-const courseButton = {
-  position: 'relative',
-  float: 'right',
-  right: '12px',
-  top: '5px',
-};
-
-const bootcampButton = {
-  position: 'relative',
-  float: 'right',
-  right: '10px',
-  top: '5px',
 };
 
 export default BootcampItem;

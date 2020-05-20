@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Bootcamps from './components/Bootcamps';
 import Header from './components/layout/Header';
 import Home from './components/pages/Home';
 import Cart from './components/pages/Cart';
 import AddBootcamp from './components/AddBootcamp';
-import { v4 as uuid } from 'uuid';
+//import { v4 as uuid } from 'uuid';
 import './App.css';
 import axios from 'axios';
 
 class App extends Component {
-  state = {
-    bootcamps: [],
-    courses: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      bootcamps: [],
+      courses: [],
+      pageLimit: 10,
+    };
+  }
 
   componentDidMount() {
     axios
@@ -24,6 +28,11 @@ class App extends Component {
   }
 
   delBootcamp = (id) => {
+    axios
+      .delete(`https://amer-demo14-test.apigee.net/api/v1/bootcamps/${id}`)
+      .then((res) => {
+        console.log(res.data);
+      });
     this.setState({
       bootcamps: [
         ...this.state.bootcamps.filter((bootcamp) => bootcamp.id !== id),
@@ -32,15 +41,15 @@ class App extends Component {
   };
 
   // add Bootcamp
-  addBootcamp = (title) => {
-    const newBootcamp = {
-      id: uuid(),
-      title,
-      completed: false,
-    };
+  addBootcamp = (obj) => {
     this.setState({
-      bootcamps: [...this.state.bootcamps, newBootcamp],
+      bootcamps: [...this.state.bootcamps, obj],
     });
+    axios
+      .post('https://amer-demo14-test.apigee.net/api/v1/bootcamps', obj)
+      .then((res) => {
+        console.log('Sucess');
+      });
   };
 
   render() {
@@ -54,7 +63,10 @@ class App extends Component {
               path="/bootcamps"
               render={(props) => (
                 <React.Fragment>
-                  <AddBootcamp addBootcamp={this.addBootcamp} />
+                  <AddBootcamp
+                    onRef={(ref) => (this.child = ref)}
+                    addBootcamp={this.addBootcamp}
+                  />
                   <Bootcamps
                     bootcamps={this.state.bootcamps}
                     delBootcamp={this.delBootcamp}

@@ -15,7 +15,7 @@ export default class Collapsible extends Component {
     this.props.onRef(undefined);
   }
   togglePanel(e) {
-    const { clicked, view } = this.props;
+    const { clicked } = this.props;
     if (clicked && this.state.open) {
       return;
     }
@@ -25,8 +25,8 @@ export default class Collapsible extends Component {
   render() {
     return (
       <div>
-        <div onClick={(e) => this.togglePanel(e)} className="header">
-          {this.props.title}
+        <div onClick={(e) => this.togglePanel(e)}>
+          {this.props.title} <br /> Cost: {this.props.cost}
         </div>
         {this.state.open ? (
           <div className="content">{this.props.children}</div>
