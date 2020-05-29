@@ -15,6 +15,10 @@ export default class AddCourse extends Component {
     tuition: 5000,
   };
 
+  componentDidMount() {
+    this.setState({ ...this.state });
+  }
+
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -23,8 +27,6 @@ export default class AddCourse extends Component {
     const { addCourse } = this.props;
 
     e.preventDefault();
-    e.stopPropagation();
-
     this.setState({ ...this.state });
     addCourse(this.state.bootcamp, { ...this.state });
   };
@@ -63,7 +65,7 @@ export default class AddCourse extends Component {
               onChange={this.onChange}
               type="text"
               defaultValue={this.state.title}
-              name="name"
+              name="title"
               placeholder="Enter Course Title"
               required
             />

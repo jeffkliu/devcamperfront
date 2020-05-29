@@ -78,7 +78,7 @@ a {
 }
 
 .getbootcampbtn {
-  position: relative;
+  display: inline-block;
   float: right;
   right: 10px;
   border: 2px black solid;
@@ -86,7 +86,7 @@ a {
 }
 
 .getcoursesbtn {
-  position: relative;
+  display: inline-block;
   float: right;
   right: 12px;
   border: 2px black solid;
@@ -99,4 +99,11 @@ a {
 .addbootcamp {
   border: 3px black solid;
   margin: 5px;
+}
+.course {
+  background: #f4f4f4;
+  padding: 5px;
+  border: 2px #ccc solid;
+  position: relative;
+  font-family: 'Open Sans', sans-serif;
 }

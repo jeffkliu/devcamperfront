@@ -15,30 +15,15 @@ export class AddBootcamp extends Component {
     //jobAssistance: false,
     //acceptGi: false,
     email: 'test@test.com',
-    validated: false,
-    setValidated: false,
     //averageCost: 0,
     //averageRating: 1,
     //courses: [],
   };
-  componentDidMount() {
-    this.props.onRef(this);
-  }
-  componentWillUnmount() {
-    this.props.onRef(undefined);
-  }
-
   onSubmit = (e) => {
-    const { addBootcamp } = this.props;
-    const form = e.currentTarget;
-
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    e.preventDefault();
 
     this.setState({ ...this.state });
-    addBootcamp({ ...this.state, averageCost: 5000 });
+    this.props.addBootcamp({ ...this.state, averageCost: 5000 });
   };
 
   onChange = (e) => {
@@ -74,12 +59,7 @@ export class AddBootcamp extends Component {
           top: '10px',
         }}
       >
-        <Form
-          noValidate
-          validated={this.state.validated}
-          className="form"
-          onSubmit={this.onSubmit}
-        >
+        <Form className="form" onSubmit={this.onSubmit}>
           <Form.Group controlId="formName">
             <Form.Label>Name: </Form.Label>
             <Form.Control

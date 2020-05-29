@@ -3,8 +3,10 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Bootcamps from './components/Bootcamps';
 import Header from './components/layout/Header';
 import Home from './components/pages/Home';
-import Cart from './components/pages/Cart';
+import CourseItem from './components/CourseItem';
+import Cart from './components/Cart';
 import AddBootcamp from './components/AddBootcamp';
+import BootcampItem from './components/BootcampItem';
 //import { v4 as uuid } from 'uuid';
 import './App.css';
 import axios from 'axios';
@@ -14,41 +16,39 @@ class App extends Component {
     super(props);
     this.state = {
       bootcamps: [],
-      courses: [],
       pageLimit: 10,
     };
   }
 
   componentDidMount() {
     axios
-      .get('https://amer-demo14-test.apigee.net/api/v1/bootcamps')
+      .get(`${process.env.REACT_APP_BOOTCAMP_HOST}/api/v1/bootcamps`)
       .then((res) => {
         this.setState({ bootcamps: res.data.data });
       });
   }
 
   delBootcamp = (id) => {
-    axios
-      .delete(`https://amer-demo14-test.apigee.net/api/v1/bootcamps/${id}`)
-      .then((res) => {
-        console.log(res.data);
-      });
     this.setState({
       bootcamps: [
         ...this.state.bootcamps.filter((bootcamp) => bootcamp.id !== id),
       ],
     });
+    axios
+      .delete(`${process.env.REACT_APP_BOOTCAMP_HOST}/api/v1/bootcamps/${id}`)
+      .then((res) => {
+        console.log(res.data);
+      });
   };
 
   // add Bootcamp
   addBootcamp = (obj) => {
-    this.setState({
-      bootcamps: [...this.state.bootcamps, obj],
-    });
     axios
-      .post('https://amer-demo14-test.apigee.net/api/v1/bootcamps', obj)
+      .post(`${process.env.REACT_APP_BOOTCAMP_HOST}/api/v1/bootcamps`, obj)
       .then((res) => {
-        console.log('Sucess');
+        this.setState({
+          bootcamps: [...this.state.bootcamps, res.data.data],
+        });
       });
   };
 
@@ -63,10 +63,7 @@ class App extends Component {
               path="/bootcamps"
               render={(props) => (
                 <React.Fragment>
-                  <AddBootcamp
-                    onRef={(ref) => (this.child = ref)}
-                    addBootcamp={this.addBootcamp}
-                  />
+                  <AddBootcamp addBootcamp={this.addBootcamp} />
                   <Bootcamps
                     bootcamps={this.state.bootcamps}
                     delBootcamp={this.delBootcamp}
@@ -74,9 +71,16 @@ class App extends Component {
                 </React.Fragment>
               )}
             />
+
+            <Route
+              path="/bootcamps/:bootcampId"
+              render={(props) => (
+                <BootcampItem delBootcamp={this.delBootcamp} />
+              )}
+            />
             <Route path="/home" component={Home}></Route>
-            <Route path="/cart" component={Cart}></Route>
-            <Route path="/courses" component={Cart}></Route>
+            <Route exact path="/cart" render={(props) => <Cart />}></Route>
+            <Route path="/courses" component={CourseItem}></Route>
           </div>
         </div>
       </Router>

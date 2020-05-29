@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BootcampItem from './BootcampItem';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 class Bootcamps extends Component {
   render() {
